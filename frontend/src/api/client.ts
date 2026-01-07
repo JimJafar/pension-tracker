@@ -1,10 +1,12 @@
-import axios from 'axios';
+import axios from "axios";
+
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const client = axios.create({
-  baseURL: '/api',
+  baseURL: `${apiUrl}/api`,
   withCredentials: true,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -14,7 +16,7 @@ client.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Unauthorized - could redirect to login
-      window.location.href = '/login';
+      window.location.href = "/login";
     }
     return Promise.reject(error);
   }

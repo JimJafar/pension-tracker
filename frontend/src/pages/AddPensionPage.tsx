@@ -1,36 +1,46 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { pensionApi } from '../api/pensions';
-import { PensionType, ContributionType } from '../types/pension';
-import Layout from '../components/common/Layout';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { pensionApi } from "../api/pensions";
+import type { PensionType, ContributionType } from "../types/pension";
+import Layout from "../components/common/Layout";
+
+type Data = {
+  name: string;
+  type: PensionType;
+  contribution_type: ContributionType;
+  monthly_amount?: number;
+  day_of_month?: number;
+};
 
 const AddPensionPage: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
-    type: 'SIPP' as PensionType,
-    contribution_type: 'manual' as ContributionType,
-    monthly_amount: '',
-    day_of_month: '',
+    name: "",
+    type: "SIPP" as PensionType,
+    contribution_type: "manual" as ContributionType,
+    monthly_amount: "",
+    day_of_month: "",
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
-      const data: any = {
+      const data: Data = {
         name: formData.name,
         type: formData.type,
         contribution_type: formData.contribution_type,
       };
 
-      if (formData.contribution_type === 'regular_fixed') {
+      if (formData.contribution_type === "regular_fixed") {
         if (!formData.monthly_amount || !formData.day_of_month) {
-          setError('Monthly amount and day of month are required for regular fixed contributions');
+          setError(
+            "Monthly amount and day of month are required for regular fixed contributions"
+          );
           setLoading(false);
           return;
         }
@@ -39,9 +49,12 @@ const AddPensionPage: React.FC = () => {
       }
 
       await pensionApi.create(data);
-      navigate('/');
-    } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to create pension');
+      navigate("/");
+    } catch (err) {
+      setError(
+        (err as { response?: { data?: { error?: string } } }).response?.data
+          ?.error || "Failed to create pension"
+      );
     } finally {
       setLoading(false);
     }
@@ -60,7 +73,9 @@ const AddPensionPage: React.FC = () => {
               id="name"
               type="text"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
               style={styles.input}
               required
             />
@@ -73,7 +88,12 @@ const AddPensionPage: React.FC = () => {
             <select
               id="type"
               value={formData.type}
-              onChange={(e) => setFormData({ ...formData, type: e.target.value as PensionType })}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  type: e.target.value as PensionType,
+                })
+              }
               style={styles.select}
             >
               <option value="SIPP">SIPP</option>
@@ -101,7 +121,7 @@ const AddPensionPage: React.FC = () => {
             </select>
           </div>
 
-          {formData.contribution_type === 'regular_fixed' && (
+          {formData.contribution_type === "regular_fixed" && (
             <>
               <div style={styles.formGroup}>
                 <label htmlFor="monthly_amount" style={styles.label}>
@@ -144,12 +164,16 @@ const AddPensionPage: React.FC = () => {
           {error && <div style={styles.error}>{error}</div>}
 
           <div style={styles.buttonGroup}>
-            <button type="submit" disabled={loading} style={styles.submitButton}>
-              {loading ? 'Creating...' : 'Create Pension'}
+            <button
+              type="submit"
+              disabled={loading}
+              style={styles.submitButton}
+            >
+              {loading ? "Creating..." : "Create Pension"}
             </button>
             <button
               type="button"
-              onClick={() => navigate('/')}
+              onClick={() => navigate("/")}
               style={styles.cancelButton}
             >
               Cancel
@@ -163,75 +187,75 @@ const AddPensionPage: React.FC = () => {
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
-    maxWidth: '600px',
-    margin: '0 auto',
+    maxWidth: "600px",
+    margin: "0 auto",
   },
   title: {
-    marginBottom: '2rem',
-    color: '#333',
+    marginBottom: "2rem",
+    color: "#333",
   },
   form: {
-    backgroundColor: 'white',
-    padding: '2rem',
-    borderRadius: '8px',
-    boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+    backgroundColor: "white",
+    padding: "2rem",
+    borderRadius: "8px",
+    boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
   },
   formGroup: {
-    marginBottom: '1.5rem',
+    marginBottom: "1.5rem",
   },
   label: {
-    display: 'block',
-    marginBottom: '0.5rem',
-    color: '#495057',
-    fontWeight: '500',
+    display: "block",
+    marginBottom: "0.5rem",
+    color: "#495057",
+    fontWeight: "500",
   },
   input: {
-    width: '100%',
-    padding: '0.75rem',
-    border: '1px solid #ced4da',
-    borderRadius: '4px',
-    fontSize: '1rem',
-    boxSizing: 'border-box',
+    width: "100%",
+    padding: "0.75rem",
+    border: "1px solid #ced4da",
+    borderRadius: "4px",
+    fontSize: "1rem",
+    boxSizing: "border-box",
   },
   select: {
-    width: '100%',
-    padding: '0.75rem',
-    border: '1px solid #ced4da',
-    borderRadius: '4px',
-    fontSize: '1rem',
-    boxSizing: 'border-box',
+    width: "100%",
+    padding: "0.75rem",
+    border: "1px solid #ced4da",
+    borderRadius: "4px",
+    fontSize: "1rem",
+    boxSizing: "border-box",
   },
   buttonGroup: {
-    display: 'flex',
-    gap: '1rem',
-    marginTop: '2rem',
+    display: "flex",
+    gap: "1rem",
+    marginTop: "2rem",
   },
   submitButton: {
     flex: 1,
-    padding: '0.75rem',
-    backgroundColor: '#007bff',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    fontSize: '1rem',
-    cursor: 'pointer',
+    padding: "0.75rem",
+    backgroundColor: "#007bff",
+    color: "white",
+    border: "none",
+    borderRadius: "4px",
+    fontSize: "1rem",
+    cursor: "pointer",
   },
   cancelButton: {
     flex: 1,
-    padding: '0.75rem',
-    backgroundColor: '#6c757d',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    fontSize: '1rem',
-    cursor: 'pointer',
+    padding: "0.75rem",
+    backgroundColor: "#6c757d",
+    color: "white",
+    border: "none",
+    borderRadius: "4px",
+    fontSize: "1rem",
+    cursor: "pointer",
   },
   error: {
-    color: '#dc3545',
-    marginTop: '1rem',
-    padding: '0.75rem',
-    backgroundColor: '#f8d7da',
-    borderRadius: '4px',
+    color: "#dc3545",
+    marginTop: "1rem",
+    padding: "0.75rem",
+    backgroundColor: "#f8d7da",
+    borderRadius: "4px",
   },
 };
 

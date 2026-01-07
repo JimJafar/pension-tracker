@@ -1,6 +1,7 @@
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import { User } from '../types/auth';
-import { authApi } from '../api/auth';
+import React, { createContext, useState, useEffect } from "react";
+import type { ReactNode } from "react";
+import type { User } from "../types/auth";
+import { authApi } from "../api/auth";
 
 interface AuthContextType {
   user: User | null;
@@ -10,9 +11,14 @@ interface AuthContextType {
   isAuthenticated: boolean;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+// eslint-disable-next-line react-refresh/only-export-components
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined
+);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -27,7 +33,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setUser(response.user);
       }
     } catch (error) {
-      console.error('Session check failed:', error);
+      console.error("Session check failed:", error);
     } finally {
       setLoading(false);
     }
@@ -38,7 +44,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (response.success && response.user) {
       setUser(response.user);
     } else {
-      throw new Error('Login failed');
+      throw new Error("Login failed");
     }
   };
 

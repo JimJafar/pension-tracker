@@ -1,9 +1,11 @@
-import client from './client';
-import { Pension, PensionWithTotals } from '../types/pension';
+import client from "./client";
+import type { Pension, PensionWithTotals } from "../types/pension";
 
 export const pensionApi = {
   getAll: async (): Promise<PensionWithTotals[]> => {
-    const response = await client.get<{ pensions: PensionWithTotals[] }>('/pensions');
+    const response = await client.get<{ pensions: PensionWithTotals[] }>(
+      "/pensions"
+    );
     return response.data.pensions;
   },
 
@@ -19,18 +21,24 @@ export const pensionApi = {
     monthly_amount?: number;
     day_of_month?: number;
   }): Promise<Pension> => {
-    const response = await client.post<{ pension: Pension }>('/pensions', data);
+    const response = await client.post<{ pension: Pension }>("/pensions", data);
     return response.data.pension;
   },
 
-  update: async (id: number, data: {
-    name?: string;
-    type?: string;
-    contribution_type?: string;
-    monthly_amount?: number;
-    day_of_month?: number;
-  }): Promise<Pension> => {
-    const response = await client.put<{ pension: Pension }>(`/pensions/${id}`, data);
+  update: async (
+    id: number,
+    data: {
+      name?: string;
+      type?: string;
+      contribution_type?: string;
+      monthly_amount?: number;
+      day_of_month?: number;
+    }
+  ): Promise<Pension> => {
+    const response = await client.put<{ pension: Pension }>(
+      `/pensions/${id}`,
+      data
+    );
     return response.data.pension;
   },
 

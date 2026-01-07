@@ -21,19 +21,13 @@ A web application for tracking pension contributions and stock holdings built wi
 
 ### Installation
 
-1. Clone the repository:
-```bash
-git clone <your-repo-url>
-cd pension-tracker
-```
-
-2. Install backend dependencies:
+1. Install backend dependencies:
 ```bash
 cd backend
 npm install
 ```
 
-3. Install frontend dependencies:
+2. Install frontend dependencies:
 ```bash
 cd ../frontend
 npm install
@@ -52,11 +46,20 @@ cp .env.example .env
 NODE_ENV=development
 PORT=3000
 SESSION_SECRET=your-random-secret-key-here
-ALPHAVANTAGE_API_KEY=your-api-key-here
+ALPHAVANTAGE_API_KEY=N1PYJXQSD4NV27OW
 DATABASE_PATH=./pension_tracker.db
 INITIAL_USERNAME=admin
 INITIAL_PASSWORD=changeme
 ```
+
+1. Create a `.env` file in the frontend directory based on `.env.example`:
+
+```bash
+cd frontend
+cp .env.example .env
+```
+
+You shouldn't need to change it for local development.
 
 ### Database Setup
 

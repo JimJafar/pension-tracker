@@ -1,12 +1,13 @@
-import client from './client';
-import { StockPrice } from '../types/pension';
+import client from "./client";
+import type { StockPrice } from "../types/pension";
 
 export const stockApi = {
-  getPrices: async (tickers: string[]): Promise<{ [ticker: string]: StockPrice | null }> => {
-    const response = await client.get<{ prices: { [ticker: string]: StockPrice | null } }>(
-      '/stocks/prices',
-      { params: { tickers: tickers.join(',') } }
-    );
+  getPrices: async (
+    tickers: string[]
+  ): Promise<{ [ticker: string]: StockPrice | null }> => {
+    const response = await client.get<{
+      prices: { [ticker: string]: StockPrice | null };
+    }>("/stocks/prices", { params: { tickers: tickers.join(",") } });
     return response.data.prices;
   },
 

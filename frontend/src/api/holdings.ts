@@ -1,5 +1,5 @@
-import client from './client';
-import { Holding } from '../types/pension';
+import client from "./client";
+import type { Holding } from "../types/pension";
 
 export const holdingApi = {
   getByPensionId: async (pensionId: number): Promise<Holding[]> => {
@@ -9,10 +9,13 @@ export const holdingApi = {
     return response.data.holdings;
   },
 
-  create: async (pensionId: number, data: {
-    ticker: string;
-    shares: number;
-  }): Promise<Holding> => {
+  create: async (
+    pensionId: number,
+    data: {
+      ticker: string;
+      shares: number;
+    }
+  ): Promise<Holding> => {
     const response = await client.post<{ holding: Holding }>(
       `/pensions/${pensionId}/holdings`,
       data
@@ -20,10 +23,13 @@ export const holdingApi = {
     return response.data.holding;
   },
 
-  update: async (id: number, data: {
-    ticker?: string;
-    shares?: number;
-  }): Promise<Holding> => {
+  update: async (
+    id: number,
+    data: {
+      ticker?: string;
+      shares?: number;
+    }
+  ): Promise<Holding> => {
     const response = await client.put<{ holding: Holding }>(
       `/holdings/${id}`,
       data

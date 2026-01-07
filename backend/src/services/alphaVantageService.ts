@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { config } from '../config/env';
+import axios from "axios";
+import { config } from "../config/env";
 
 interface PriceCache {
   [ticker: string]: {
@@ -42,36 +42,36 @@ class AlphaVantageService {
 
       // Queue the request to respect rate limits
       return await this.queueRequest(async () => {
-        const response = await axios.get('https://www.alphavantage.co/query', {
+        const response = await axios.get("https://www.alphavantage.co/query", {
           params: {
-            function: 'GLOBAL_QUOTE',
-            symbol: ticker,
+            function: "GLOBAL_QUOTE",
+            symbol: `${ticker}.LON`,
             apikey: this.API_KEY,
           },
         });
 
-        const globalQuote = response.data['Global Quote'];
+        const globalQuote = response.data["Global Quote"];
 
-        if (!globalQuote || !globalQuote['05. price']) {
+        if (!globalQuote || !globalQuote["05. price"]) {
           console.error(`No price data for ticker: ${ticker}`);
           return null;
         }
 
-        const price = parseFloat(globalQuote['05. price']);
+        const price = parseFloat(globalQuote["05. price"]);
         const timestamp = Date.now();
 
         // Cache the price
         this.cache[ticker] = {
           price,
           timestamp,
-          currency: 'USD', // AlphaVantage returns USD prices
+          currency: "USD", // AlphaVantage returns USD prices
         };
 
         return {
           ticker,
           price,
           timestamp: new Date(timestamp).toISOString(),
-          currency: 'USD',
+          currency: "USD",
         };
       });
     } catch (error) {
@@ -80,7 +80,9 @@ class AlphaVantageService {
     }
   }
 
-  async getPrices(tickers: string[]): Promise<{ [ticker: string]: StockPrice | null }> {
+  async getPrices(
+    tickers: string[]
+  ): Promise<{ [ticker: string]: StockPrice | null }> {
     const results: { [ticker: string]: StockPrice | null } = {};
 
     // Process tickers sequentially to respect rate limits
@@ -100,8 +102,8 @@ class AlphaVantageService {
 
     // Queue the delay for next request
     this.requestQueue = result.then(
-      () => new Promise(resolve => setTimeout(resolve, this.REQUEST_DELAY)),
-      () => new Promise(resolve => setTimeout(resolve, this.REQUEST_DELAY))
+      () => new Promise((resolve) => setTimeout(resolve, this.REQUEST_DELAY)),
+      () => new Promise((resolve) => setTimeout(resolve, this.REQUEST_DELAY))
     );
 
     return result;

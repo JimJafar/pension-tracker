@@ -1,25 +1,26 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const LoginPage: React.FC = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
       await login(username, password);
-      navigate('/');
+      navigate("/");
     } catch (err) {
-      setError('Invalid username or password');
+      console.error("Login error:", err);
+      setError("Invalid username or password");
     } finally {
       setLoading(false);
     }
@@ -59,7 +60,7 @@ const LoginPage: React.FC = () => {
           </div>
           {error && <div style={styles.error}>{error}</div>}
           <button type="submit" disabled={loading} style={styles.button}>
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
       </div>
@@ -69,60 +70,60 @@ const LoginPage: React.FC = () => {
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: '100vh',
-    backgroundColor: '#f5f5f5',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    minHeight: "100vh",
+    backgroundColor: "#f5f5f5",
   },
   card: {
-    backgroundColor: 'white',
-    padding: '2rem',
-    borderRadius: '8px',
-    boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-    width: '100%',
-    maxWidth: '400px',
+    backgroundColor: "white",
+    padding: "2rem",
+    borderRadius: "8px",
+    boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+    width: "100%",
+    maxWidth: "400px",
   },
   title: {
-    textAlign: 'center',
-    marginBottom: '2rem',
-    color: '#333',
+    textAlign: "center",
+    marginBottom: "2rem",
+    color: "#333",
   },
   form: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column",
   },
   formGroup: {
-    marginBottom: '1rem',
+    marginBottom: "1rem",
   },
   label: {
-    display: 'block',
-    marginBottom: '0.5rem',
-    color: '#555',
-    fontWeight: '500',
+    display: "block",
+    marginBottom: "0.5rem",
+    color: "#555",
+    fontWeight: "500",
   },
   input: {
-    width: '100%',
-    padding: '0.75rem',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
-    fontSize: '1rem',
-    boxSizing: 'border-box',
+    width: "100%",
+    padding: "0.75rem",
+    border: "1px solid #ddd",
+    borderRadius: "4px",
+    fontSize: "1rem",
+    boxSizing: "border-box",
   },
   button: {
-    padding: '0.75rem',
-    backgroundColor: '#007bff',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    fontSize: '1rem',
-    cursor: 'pointer',
-    marginTop: '1rem',
+    padding: "0.75rem",
+    backgroundColor: "#007bff",
+    color: "white",
+    border: "none",
+    borderRadius: "4px",
+    fontSize: "1rem",
+    cursor: "pointer",
+    marginTop: "1rem",
   },
   error: {
-    color: '#dc3545',
-    marginTop: '0.5rem',
-    fontSize: '0.875rem',
+    color: "#dc3545",
+    marginTop: "0.5rem",
+    fontSize: "0.875rem",
   },
 };
 
