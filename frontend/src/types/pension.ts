@@ -10,6 +10,7 @@ export interface Pension {
   contribution_type: ContributionType;
   monthly_amount?: number;
   day_of_month?: number;
+  cash?: number;
   created_at: string;
 }
 

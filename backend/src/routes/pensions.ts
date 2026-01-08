@@ -46,8 +46,14 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
 // Create pension
 router.post("/", async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, type, contribution_type, monthly_amount, day_of_month } =
-      req.body;
+    const {
+      name,
+      type,
+      contribution_type,
+      monthly_amount,
+      day_of_month,
+      cash,
+    } = req.body;
 
     // Validation
     if (!name || !type || !contribution_type) {
@@ -67,12 +73,10 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
 
     if (contribution_type === "regular_fixed") {
       if (!monthly_amount || !day_of_month) {
-        res
-          .status(400)
-          .json({
-            error:
-              "Monthly amount and day of month required for regular fixed contributions",
-          });
+        res.status(400).json({
+          error:
+            "Monthly amount and day of month required for regular fixed contributions",
+        });
         return;
       }
       if (day_of_month < 1 || day_of_month > 31) {
@@ -93,6 +97,7 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
         contribution_type === "regular_fixed" ? monthly_amount : undefined,
       day_of_month:
         contribution_type === "regular_fixed" ? day_of_month : undefined,
+      cash,
     });
 
     const pension = await PensionModel.findById(id);
@@ -120,8 +125,14 @@ router.put("/:id", async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const { name, type, contribution_type, monthly_amount, day_of_month } =
-      req.body;
+    const {
+      name,
+      type,
+      contribution_type,
+      monthly_amount,
+      day_of_month,
+      cash,
+    } = req.body;
 
     await PensionModel.update(id, {
       name,
@@ -129,6 +140,7 @@ router.put("/:id", async (req: Request, res: Response): Promise<void> => {
       contribution_type,
       monthly_amount,
       day_of_month,
+      cash,
     });
 
     const updated = await PensionModel.findById(id);

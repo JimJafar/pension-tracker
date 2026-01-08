@@ -10,6 +10,7 @@ type Data = {
   contribution_type: ContributionType;
   monthly_amount?: number;
   day_of_month?: number;
+  cash?: number;
 };
 
 const AddPensionPage: React.FC = () => {
@@ -20,6 +21,7 @@ const AddPensionPage: React.FC = () => {
     contribution_type: "manual" as ContributionType,
     monthly_amount: "",
     day_of_month: "",
+    cash: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -46,6 +48,10 @@ const AddPensionPage: React.FC = () => {
         }
         data.monthly_amount = parseFloat(formData.monthly_amount);
         data.day_of_month = parseInt(formData.day_of_month);
+      }
+
+      if (formData.cash) {
+        data.cash = parseInt(formData.cash);
       }
 
       await pensionApi.create(data);
@@ -119,6 +125,23 @@ const AddPensionPage: React.FC = () => {
               <option value="manual">Manual</option>
               <option value="regular_fixed">Regular Fixed</option>
             </select>
+          </div>
+
+          <div style={styles.formGroup}>
+            <label htmlFor="cash" style={styles.label}>
+              Cash (integer)
+            </label>
+            <input
+              id="cash"
+              type="number"
+              step="1"
+              min="0"
+              value={formData.cash}
+              onChange={(e) =>
+                setFormData({ ...formData, cash: e.target.value })
+              }
+              style={styles.input}
+            />
           </div>
 
           {formData.contribution_type === "regular_fixed" && (

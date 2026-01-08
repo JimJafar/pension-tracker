@@ -87,7 +87,7 @@ const DashboardPage: React.FC = () => {
 
     return {
       ...pension,
-      current_value: currentValue,
+      current_value: currentValue + (pension.cash || 0),
       holdings: holdingsWithPrices,
     };
   });

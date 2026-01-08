@@ -11,6 +11,7 @@ export interface Pension {
   contribution_type: ContributionType;
   monthly_amount?: number;
   day_of_month?: number;
+  cash?: number;
   created_at: string;
 }
 
@@ -59,6 +60,7 @@ export const PensionModel = {
     contribution_type: ContributionType;
     monthly_amount?: number;
     day_of_month?: number;
+    cash?: number;
   }): Promise<number> => {
     const {
       user_id,
@@ -67,10 +69,11 @@ export const PensionModel = {
       contribution_type,
       monthly_amount,
       day_of_month,
+      cash,
     } = data;
     return insert(
-      `INSERT INTO pensions (user_id, name, type, contribution_type, monthly_amount, day_of_month)
-       VALUES (?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO pensions (user_id, name, type, contribution_type, monthly_amount, day_of_month, cash)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
         user_id,
         name,
@@ -78,6 +81,7 @@ export const PensionModel = {
         contribution_type,
         monthly_amount || null,
         day_of_month || null,
+        cash || 0,
       ]
     );
   },
@@ -90,6 +94,7 @@ export const PensionModel = {
       contribution_type?: ContributionType;
       monthly_amount?: number;
       day_of_month?: number;
+      cash?: number;
     }
   ): Promise<void> => {
     const updates: string[] = [];
@@ -114,6 +119,10 @@ export const PensionModel = {
     if (data.day_of_month !== undefined) {
       updates.push("day_of_month = ?");
       params.push(data.day_of_month || null);
+    }
+    if (data.cash !== undefined) {
+      updates.push("cash = ?");
+      params.push(data.cash || 0);
     }
 
     if (updates.length === 0) return;

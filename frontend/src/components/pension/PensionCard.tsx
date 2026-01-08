@@ -43,6 +43,12 @@ const PensionCard: React.FC<PensionCardProps> = ({ pension, holdings }) => {
           </span>
         </div>
         <div style={styles.totalItem}>
+          <span style={styles.totalLabel}>Cash:</span>
+          <span style={styles.totalValue}>
+            {formatCurrency(pension.cash || 0)}
+          </span>
+        </div>
+        <div style={styles.totalItem}>
           <span style={styles.totalLabel}>Current Value:</span>
           <span style={styles.totalValue}>
             {formatCurrency(pension.current_value)}
@@ -123,7 +129,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   totals: {
     display: "grid",
-    gridTemplateColumns: "repeat(2, 1fr)",
+    gridTemplateColumns: "repeat(3, 1fr)",
     gap: "1rem",
     marginBottom: "1.5rem",
     padding: "1rem",

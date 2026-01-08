@@ -30,6 +30,12 @@ const ManagePensionPage: React.FC = () => {
     shares: "",
     currencyUnit: "",
   });
+  const [updatedPension, setUpdatedPension] = useState<Partial<Pension>>({
+    cash: pension?.cash,
+    name: pension?.name,
+    monthly_amount: pension?.monthly_amount,
+    day_of_month: pension?.day_of_month,
+  });
 
   useEffect(() => {
     if (id) {
@@ -131,6 +137,18 @@ const ManagePensionPage: React.FC = () => {
     }
   };
 
+  const handleUpdatePension = async () => {
+    try {
+      if (pension) {
+        const updated = await pensionApi.update(pension.id, updatedPension);
+        setPension(updated);
+      }
+    } catch (err) {
+      console.error("Error updating pension:", err);
+      setError("Failed to update pension");
+    }
+  };
+
   if (loading)
     return (
       <Layout>
@@ -162,15 +180,67 @@ const ManagePensionPage: React.FC = () => {
             </p>
             {pension.monthly_amount && (
               <p>
-                <strong>Monthly Amount:</strong> £{pension.monthly_amount}
+                <strong>Monthly Amount:</strong>
+
+                <input
+                  id="monthly_amount"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={updatedPension.monthly_amount}
+                  onChange={(e) =>
+                    setUpdatedPension({
+                      ...updatedPension,
+                      monthly_amount: parseFloat(e.target.value),
+                    })
+                  }
+                  style={styles.input}
+                  required
+                />
               </p>
             )}
             {pension.day_of_month && (
               <p>
-                <strong>Day of Month:</strong> {pension.day_of_month}
+                <strong>Day of Month:</strong>
+
+                <input
+                  id="day_of_month"
+                  type="number"
+                  min="1"
+                  max="31"
+                  value={updatedPension.day_of_month}
+                  onChange={(e) =>
+                    setUpdatedPension({
+                      ...updatedPension,
+                      day_of_month: parseInt(e.target.value),
+                    })
+                  }
+                  style={styles.input}
+                  required
+                />
               </p>
             )}
+            <p>
+              <strong>Cash:</strong>
+              <input
+                type="number"
+                step="1"
+                placeholder="Cash Amount"
+                value={updatedPension.cash || ""}
+                onChange={(e) =>
+                  setUpdatedPension({
+                    ...updatedPension,
+                    cash: Math.round(parseFloat(e.target.value)),
+                  })
+                }
+                style={styles.input}
+                required
+              />
+            </p>
           </div>
+          <button onClick={handleUpdatePension} style={styles.updateButton}>
+            Update Pension
+          </button>
           <button onClick={handleDeletePension} style={styles.deleteButton}>
             Delete Pension
           </button>
@@ -413,6 +483,15 @@ const styles: { [key: string]: React.CSSProperties } = {
     border: "none",
     borderRadius: "4px",
     cursor: "pointer",
+  },
+  updateButton: {
+    padding: "0.75rem 1.5rem",
+    backgroundColor: "#28a745",
+    color: "white",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+    marginRight: "1rem",
   },
   backButton: {
     padding: "0.75rem 1.5rem",
