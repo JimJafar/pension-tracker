@@ -1,5 +1,6 @@
-export type PensionType = 'SIPP' | 'managed';
-export type ContributionType = 'regular_fixed' | 'manual';
+export type PensionType = "SIPP" | "managed";
+export type ContributionType = "regular_fixed" | "manual";
+export type CurrencyUnit = "pounds" | "pence";
 
 export interface Pension {
   id: number;
@@ -33,6 +34,7 @@ export interface Holding {
   pension_id: number;
   ticker: string;
   shares: number;
+  currency_unit: CurrencyUnit;
   created_at: string;
   updated_at: string;
 }
@@ -50,7 +52,7 @@ export interface StockPrice {
   currency: string;
 }
 
-export type ContributionStatus = 'received' | 'pending' | 'missing' | 'late';
+export type ContributionStatus = "received" | "pending" | "missing" | "late";
 
 export interface ExpectedContribution {
   date: string;

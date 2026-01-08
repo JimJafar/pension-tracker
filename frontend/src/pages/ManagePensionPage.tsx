@@ -3,7 +3,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import { pensionApi } from "../api/pensions";
 import { contributionApi } from "../api/contributions";
 import { holdingApi } from "../api/holdings";
-import type { Pension, Contribution, Holding } from "../types/pension";
+import type {
+  Pension,
+  Contribution,
+  Holding,
+  CurrencyUnit,
+} from "../types/pension";
 import Layout from "../components/common/Layout";
 
 const ManagePensionPage: React.FC = () => {
@@ -20,7 +25,11 @@ const ManagePensionPage: React.FC = () => {
     amount: "",
     date: "",
   });
-  const [newHolding, setNewHolding] = useState({ ticker: "", shares: "" });
+  const [newHolding, setNewHolding] = useState({
+    ticker: "",
+    shares: "",
+    currencyUnit: "",
+  });
 
   useEffect(() => {
     if (id) {
@@ -98,8 +107,9 @@ const ManagePensionPage: React.FC = () => {
       await holdingApi.create(parseInt(id!), {
         ticker: newHolding.ticker.toUpperCase(),
         shares: parseFloat(newHolding.shares),
+        currency_unit: newHolding.currencyUnit,
       });
-      setNewHolding({ ticker: "", shares: "" });
+      setNewHolding({ ticker: "", shares: "", currencyUnit: "" });
       fetchData();
     } catch (err) {
       console.error("Error adding holding:", err);
@@ -262,6 +272,27 @@ const ManagePensionPage: React.FC = () => {
                 style={styles.input}
                 required
               />
+
+              <div style={styles.formGroup}>
+                <label htmlFor="currency_unit" style={styles.label}>
+                  Currency Unit *
+                </label>
+                <select
+                  id="currency_unit"
+                  value={newHolding.currencyUnit}
+                  onChange={(e) =>
+                    setNewHolding({
+                      ...newHolding,
+                      currencyUnit: e.target.value as CurrencyUnit,
+                    })
+                  }
+                  style={styles.select}
+                >
+                  <option value="pounds">Pounds</option>
+                  <option value="pence">Pence</option>
+                </select>
+              </div>
+
               <button type="submit" style={styles.addButton}>
                 Add Holding
               </button>
@@ -275,6 +306,7 @@ const ManagePensionPage: React.FC = () => {
                   <tr>
                     <th style={styles.th}>Ticker</th>
                     <th style={styles.th}>Shares</th>
+                    <th style={styles.th}>Currency Unit</th>
                     <th style={styles.th}>Actions</th>
                   </tr>
                 </thead>
@@ -283,6 +315,7 @@ const ManagePensionPage: React.FC = () => {
                     <tr key={holding.id}>
                       <td style={styles.td}>{holding.ticker}</td>
                       <td style={styles.td}>{holding.shares.toFixed(4)}</td>
+                      <td style={styles.td}>{holding.currency_unit}</td>
                       <td style={styles.td}>
                         <button
                           onClick={() => handleDeleteHolding(holding.id)}

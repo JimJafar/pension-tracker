@@ -1,5 +1,5 @@
-import bcrypt from 'bcrypt';
-import { UserModel } from '../models/User';
+import bcrypt from "bcrypt";
+import { UserModel } from "../models/User";
 
 const SALT_ROUNDS = 10;
 
@@ -12,16 +12,24 @@ export const authService = {
     return bcrypt.compare(password, hash);
   },
 
-  login: async (username: string, password: string): Promise<{ id: number; username: string } | null> => {
+  login: async (
+    username: string,
+    password: string
+  ): Promise<{ id: number; username: string } | null> => {
     const user = await UserModel.findByUsername(username);
 
     if (!user) {
+      console.log(`Login failed: User '${username}' not found.`);
       return null;
     }
 
-    const isValid = await authService.verifyPassword(password, user.password_hash);
+    const isValid = await authService.verifyPassword(
+      password,
+      user.password_hash
+    );
 
     if (!isValid) {
+      console.log(`Login failed: Invalid password for user '${username}'.`);
       return null;
     }
 

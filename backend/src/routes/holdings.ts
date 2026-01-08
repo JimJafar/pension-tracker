@@ -42,7 +42,7 @@ router.post(
   async (req: Request, res: Response): Promise<void> => {
     try {
       const pensionId = parseInt(req.params.pensionId);
-      const { ticker, shares } = req.body;
+      const { ticker, shares, currency_unit } = req.body;
 
       // Validation
       if (!ticker || !shares) {
@@ -57,6 +57,11 @@ router.post(
 
       if (!/^[A-Z0-9]{1,5}$/i.test(ticker)) {
         res.status(400).json({ error: "Invalid ticker format" });
+        return;
+      }
+
+      if (currency_unit && !["pounds", "pence"].includes(currency_unit)) {
+        res.status(400).json({ error: "Invalid currency unit" });
         return;
       }
 
@@ -89,6 +94,7 @@ router.post(
         pension_id: pensionId,
         ticker,
         shares,
+        currency_unit,
       });
 
       const holding = await HoldingModel.findById(id);
@@ -120,7 +126,7 @@ router.put(
         return;
       }
 
-      const { ticker, shares } = req.body;
+      const { ticker, shares, currency_unit } = req.body;
 
       // Validate ticker format if provided
       if (ticker && !/^[A-Z0-9]{1,5}$/i.test(ticker)) {
@@ -134,9 +140,16 @@ router.put(
         return;
       }
 
+      // Validate currency_unit if provided
+      if (currency_unit && !["pounds", "pence"].includes(currency_unit)) {
+        res.status(400).json({ error: "Invalid currency unit" });
+        return;
+      }
+
       await HoldingModel.update(id, {
         ticker,
         shares,
+        currency_unit,
       });
 
       const updated = await HoldingModel.findById(id);

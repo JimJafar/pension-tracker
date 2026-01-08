@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS holdings (
     pension_id INTEGER NOT NULL,
     ticker TEXT NOT NULL,
     shares DECIMAL(12, 4) NOT NULL,
+    currency_unit TEXT NOT NULL DEFAULT 'pounds' CHECK(currency_unit IN ('pounds', 'pence')),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (pension_id) REFERENCES pensions(id) ON DELETE CASCADE,

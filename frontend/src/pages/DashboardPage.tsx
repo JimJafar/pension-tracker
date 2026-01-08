@@ -68,11 +68,11 @@ const DashboardPage: React.FC = () => {
       return {
         ...holding,
         current_price:
-          currentPrice && currentPrice > 300
+          currentPrice && holding.currency_unit === "pence"
             ? currentPrice / 100
             : currentPrice,
         total_value:
-          totalValue && (currentPrice || 0) > 300
+          totalValue && holding.currency_unit === "pence"
             ? totalValue / 100
             : totalValue,
         currency: stockPrice?.currency,

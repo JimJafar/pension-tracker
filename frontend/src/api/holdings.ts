@@ -14,6 +14,7 @@ export const holdingApi = {
     data: {
       ticker: string;
       shares: number;
+      currency_unit: string;
     }
   ): Promise<Holding> => {
     const response = await client.post<{ holding: Holding }>(
@@ -28,6 +29,7 @@ export const holdingApi = {
     data: {
       ticker?: string;
       shares?: number;
+      currency_unit?: string;
     }
   ): Promise<Holding> => {
     const response = await client.put<{ holding: Holding }>(
